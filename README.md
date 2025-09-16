@@ -287,14 +287,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📞 Contact & Support
 
 ### **Maintainer**
-- **Name**: Your Name
-- **Email**: your.email@example.com
-- **GitHub**: [@yourusername](https://github.com/yourusername)
-
-### **Project Links**
-- **Repository**: [GitHub](https://github.com/yourusername/krishi-sahaayak)
-- **Issues**: [Bug Reports](https://github.com/yourusername/krishi-sahaayak/issues)
-- **Discussions**: [Community Forum](https://github.com/yourusername/krishi-sahaayak/discussions)
+- **Name**: Prashant Chauhan
+- **Email**: psc856@gmail.com
+- **GitHub**: [@yourusername](https://github.com/psc856)
 
 ---
 
