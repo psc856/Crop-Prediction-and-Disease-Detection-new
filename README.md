@@ -283,7 +283,7 @@ We welcome contributions from the community! Here's how you can help:
 ### **Maintainer**
 - **Name**: Prashant Chauhan
 - **Email**: psc856@gmail.com
-- **GitHub**: [@yourusername](https://github.com/psc856)
+- **GitHub**: [@psc856](https://github.com/psc856)
 
 ---
 
