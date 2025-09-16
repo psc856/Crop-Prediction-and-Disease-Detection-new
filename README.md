@@ -294,12 +294,4 @@ We welcome contributions from the community! Here's how you can help:
 
 ---
 
-## 📈 Project Statistics
-
-<div align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=yourusername&repo=krishi-sahaayak&show_icons=true&theme=radical" alt="GitHub Stats">
-</div>
-
----
-
 *Last updated: September 2025*
