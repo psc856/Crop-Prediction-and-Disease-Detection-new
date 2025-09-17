@@ -17,17 +17,17 @@
     
     <style>
         :root {
-            /* Light theme variables */
+            /* Light theme variables - Fixed colors */
             --bg-primary: #ffffff;
             --bg-secondary: #f8fafc;
-            --bg-glass: rgba(255, 255, 255, 0.25);
+            --bg-glass: rgba(255, 255, 255, 0.8);
             --text-primary: #1e293b;
-            --text-secondary: #64748b;
-            --text-accent: #059669;
-            --border: rgba(148, 163, 184, 0.2);
+            --text-secondary: #475569;
+            --text-accent: #047857;
+            --border: rgba(148, 163, 184, 0.3);
             --shadow: rgba(0, 0, 0, 0.1);
-            --gradient-start: #10b981;
-            --gradient-end: #059669;
+            --gradient-start: #059669;
+            --gradient-end: #047857;
             --nav-bg: rgba(255, 255, 255, 0.95);
         }
 
@@ -35,14 +35,14 @@
             /* Dark theme variables */
             --bg-primary: #0f172a;
             --bg-secondary: #1e293b;
-            --bg-glass: rgba(15, 23, 42, 0.4);
+            --bg-glass: rgba(15, 23, 42, 0.8);
             --text-primary: #f1f5f9;
             --text-secondary: #94a3b8;
             --text-accent: #34d399;
-            --border: rgba(71, 85, 105, 0.3);
+            --border: rgba(71, 85, 105, 0.4);
             --shadow: rgba(0, 0, 0, 0.3);
-            --gradient-start: #059669;
-            --gradient-end: #047857;
+            --gradient-start: #10b981;
+            --gradient-end: #34d399;
             --nav-bg: rgba(15, 23, 42, 0.95);
         }
 
@@ -98,11 +98,11 @@
         }
 
         .theme-toggle {
-            background: none;
+            background: var(--bg-glass);
             border: 2px solid var(--border);
             border-radius: 50px;
             padding: 0.5rem 1rem;
-            color: var(--text-secondary);
+            color: var(--text-primary);
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
@@ -114,6 +114,7 @@
             border-color: var(--text-accent);
             color: var(--text-accent);
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--shadow);
         }
 
         /* Background Animation */
@@ -172,6 +173,7 @@
             font-size: 0.9rem;
             color: var(--text-accent);
             margin-bottom: 2rem;
+            font-weight: 600;
         }
 
         /* Glass Cards */
@@ -328,6 +330,7 @@
             font-size: 0.9rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
+            font-weight: 500;
         }
 
         /* Animations */
