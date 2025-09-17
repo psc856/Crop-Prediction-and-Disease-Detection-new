@@ -1,97 +1,141 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plant Disease Classifier</title>
+    <title>Crop Disease Detection - Krishi Sahaayak</title>
 
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&family=Oswald:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-
-    <!-- Vanta.js -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Three.js for animations -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
 
     <style>
+        :root {
+            /* Light theme variables */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-glass: rgba(255, 255, 255, 0.25);
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-accent: #059669;
+            --border: rgba(148, 163, 184, 0.2);
+            --shadow: rgba(0, 0, 0, 0.1);
+            --gradient-start: #10b981;
+            --gradient-end: #059669;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --success: #10b981;
+            --nav-bg: rgba(255, 255, 255, 0.95);
+        }
+
+        [data-theme="dark"] {
+            /* Dark theme variables */
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-glass: rgba(15, 23, 42, 0.4);
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-accent: #34d399;
+            --border: rgba(71, 85, 105, 0.3);
+            --shadow: rgba(0, 0, 0, 0.3);
+            --gradient-start: #059669;
+            --gradient-end: #047857;
+            --danger: #f87171;
+            --warning: #fbbf24;
+            --success: #34d399;
+            --nav-bg: rgba(15, 23, 42, 0.95);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            margin: 0;
-            font-family: 'Oswald', sans-serif;
-            color: #333;
-            height: 100vh;
-            background-color: black;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .header {
-            position: absolute;
-            top: 50px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            padding: 10px 20px;
-            border-radius: 15px;
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: var(--nav-bg);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--text-accent);
+            text-decoration: none;
+        }
+
+        .nav-brand i {
+            font-size: 1.5rem;
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .theme-toggle, .back-btn {
+            background: none;
+            border: 2px solid var(--border);
+            border-radius: 50px;
+            padding: 0.5rem 1rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .back-btn {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
             color: white;
-            z-index: 10;
+            border-color: transparent;
         }
 
-        h1 {
-            font-family: 'Fira Sans', cursive;
-            font-size: 2.5rem;
-            margin: 0;
+        .theme-toggle:hover, .back-btn:hover {
+            border-color: var(--text-accent);
+            transform: translateY(-2px);
         }
 
-        .container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            width: 80%;
-            height: 80%;
-            margin-top: 80px;
-        }
-
-        .form-container {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        input[type="file"] {
-            margin-bottom: 20px;
-        }
-
-        .btn-primary {
-            background-color: #28a745;
-            border-color: #28a745;
-            padding: 10px 20px;
-            font-size: 1.1rem;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: transform 0.5s;
-        }
-
-        .btn-primary:hover {
-            background-color: transparent;
+        .back-btn:hover {
             color: white;
-            transform: translateY(-8px);
-            border-color: #16c1d7;
-            border-width: 3px;
+            box-shadow: 0 10px 25px var(--shadow);
         }
 
-        #wrapper {
-            position: absolute;
+        /* Background Animation */
+        #vanta-background {
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
@@ -99,63 +143,408 @@
             z-index: -1;
         }
 
-        .result-container {
-            display: none;
+        /* Main Container */
+        .container {
+            padding: 6rem 2rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Glass Card */
+        .glass-card {
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px var(--shadow);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        /* File Upload */
+        .file-upload {
+            position: relative;
+            display: block;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 2rem;
+        }
+
+        .file-upload input[type="file"] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .file-upload-label {
+            display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            flex-direction: column;
-            color: white;
+            padding: 4rem 2rem;
+            border: 2px dashed var(--border);
+            border-radius: 16px;
+            background: var(--bg-glass);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .file-upload-label:hover {
+            border-color: var(--text-accent);
+            background: rgba(16, 185, 129, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .file-upload-icon {
+            font-size: 4rem;
+            color: var(--text-accent);
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .file-upload-label:hover .file-upload-icon {
+            transform: scale(1.1);
+        }
+
+        .file-upload h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .file-upload p {
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .file-upload small {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        /* Result Container */
+        .result-container {
+            display: none;
+            text-align: center;
+            margin-top: 2rem;
             opacity: 0;
-            transition: opacity 2s ease-in-out;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
         }
 
-        .result-container.active {
-            display: flex;
+        .result-container.show {
+            display: block;
             opacity: 1;
+            transform: translateY(0);
         }
 
-        .result-container img {
-            width: 300px;
-            height: 300px;
-            margin-bottom: 20px;
-            border-radius: 15px;
-            border: 2px solid #f9f9f9;
-        }
-
-        .suggestion-container {
-            display: none; /* Hide initially */
-        }
-
-        .suggestion-container.active {
-            display: block; /* Show when active */
-        }
-
-        .recommendation {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-top: 20px;
+        .result-image {
             width: 100%;
+            max-width: 400px;
+            height: 300px;
+            border-radius: 16px;
+            object-fit: cover;
+            margin-bottom: 1.5rem;
+            border: 3px solid var(--border);
+            box-shadow: 0 10px 25px var(--shadow);
         }
 
-        .recommendation-result {
-            flex: 1;
-            margin-right: 20px;
+        .prediction-card {
+            background: var(--bg-glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1rem auto;
+            max-width: 500px;
         }
 
-        .recommendation-info {
-            flex: 1;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 15px;
+        .prediction-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .confidence-container {
+            margin: 1rem 0;
+        }
+
+        .confidence-bar {
+            width: 100%;
+            height: 12px;
+            background: var(--border);
+            border-radius: 6px;
+            margin: 0.5rem 0;
+            overflow: hidden;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+            border-radius: 6px;
+            transition: width 1.5s ease;
+            width: 0%;
+        }
+
+        .confidence-text {
+            font-weight: 600;
+            color: var(--text-accent);
+        }
+
+        /* Modern Button */
+        .btn-modern {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            border: none;
+            border-radius: 50px;
+            padding: 1rem 2rem;
             color: white;
-            transition: opacity 2s ease-in-out;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-modern:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px var(--shadow);
+        }
+
+        .btn-secondary {
+            background: var(--bg-glass);
+            color: var(--text-primary);
+            border: 2px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--text-accent);
+            color: var(--text-accent);
+        }
+
+        /* Recommendations */
+        .recommendations {
+            margin-top: 2rem;
+            animation: fadeInUp 0.8s ease-out 0.5s both;
+        }
+
+        .recommendations h3 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: var(--text-accent);
+            font-size: 1.75rem;
+        }
+
+        .recommendation-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .recommendation-item {
+            background: var(--bg-glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .recommendation-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px var(--shadow);
+            border-color: var(--text-accent);
+        }
+
+        .recommendation-item strong {
+            color: var(--text-accent);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+            }
+            
+            .nav-brand {
+                font-size: 1.1rem;
+            }
+            
+            .container {
+                padding: 5rem 1rem 2rem;
+            }
+            
+            .file-upload-label {
+                padding: 3rem 1.5rem;
+            }
+            
+            .file-upload-icon {
+                font-size: 3rem;
+            }
         }
     </style>
+</head>
+
+<body data-theme="light">
+    <div id="vanta-background"></div>
+    
+    <!-- Navigation -->
+    <nav class="navbar">
+        <a href="landing.html" class="nav-brand">
+            <i class="fas fa-seedling"></i>
+            <span>Krishi Sahaayak</span>
+        </a>
+        <div class="nav-controls">
+            <a href="landing.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back</span>
+            </a>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <i class="fas fa-moon" id="themeIcon"></i>
+                <span id="themeText">Dark</span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>Disease Detection</h1>
+            <p>Upload an image of your crop to identify potential diseases and get expert treatment recommendations</p>
+        </section>
+        
+        <!-- Main Form -->
+        <div class="glass-card">
+            <form method="POST" enctype="multipart/form-data" action="{{ url_for('crop_disease') }}" id="diseaseForm">
+                <div class="file-upload">
+                    <input type="file" id="diseaseImage" name="file" accept="image/*" required onchange="previewImage(this)">
+                    <label for="diseaseImage" class="file-upload-label">
+                        <i class="fas fa-cloud-upload-alt file-upload-icon"></i>
+                        <h3>Upload Crop Image</h3>
+                        <p>Click to select or drag and drop your image here</p>
+                        <small>Supported formats: JPG, PNG, WEBP (Max: 5MB)</small>
+                    </label>
+                </div>
+                
+                <div style="text-align: center;">
+                    <button type="submit" class="btn-modern" id="predictBtn">
+                        <i class="fas fa-search"></i>
+                        <span>Analyze Image</span>
+                    </button>
+                    <button type="button" class="btn-modern btn-secondary" onclick="clearResults()" style="margin-left: 1rem;">
+                        <i class="fas fa-refresh"></i>
+                        <span>Clear</span>
+                    </button>
+                </div>
+            </form>
+
+            <!-- Results Section -->
+            <div class="result-container" id="resultContainer">
+                <!-- Display the image if provided by the backend -->
+                {% if image_url %}
+                    <img src="{{ image_url }}" alt="Analyzed Crop" class="result-image" id="analyzedImage">
+                {% else %}
+                    <img id="previewImage" class="result-image" style="display: none;" alt="Preview">
+                {% endif %}
+
+                {% if prediction %}
+                <div class="prediction-card">
+                    <h3 class="prediction-text">Detected: {{ prediction }}</h3>
+                    <div class="confidence-container">
+                        <p class="confidence-text">Confidence: {{ confidence }}%</p>
+                        <div class="confidence-bar">
+                            <div class="confidence-fill" style="width: {{ confidence }}%"></div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Recommendations Section -->
+            {% if prediction %}
+            <div class="recommendations" id="recommendationsSection">
+                <h3>
+                    <i class="fas fa-lightbulb"></i>
+                    Treatment Recommendations
+                </h3>
+                <div class="recommendation-grid" id="recommendationContent">
+                    <!-- Recommendations will be populated by JavaScript -->
+                </div>
+                <div style="text-align: center; margin-top: 1.5rem;">
+                    <button class="btn-modern" onclick="showRecommendations('{{ prediction }}')">
+                        <i class="fas fa-prescription-bottle-alt"></i>
+                        <span>Get Treatment Plan</span>
+                    </button>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
 
     <script>
-        const prediction = "{{ prediction }}";  // Inject the prediction variable from Flask
-        console.log("Predicted class:", prediction);
+        // Disease database
         const diseases = {
             "Bell Pepper Healthy": {
                 Tip: "Maintain regular care; monitor for any signs of disease."
@@ -215,12 +604,12 @@
             },
             "Tomato Yellow Leaf Curl Virus": {
                 Cause: "Virus spread by whiteflies.",
-                Cure: "No Cure; remove infected plants.",
+                Cure: "No cure available; remove infected plants.",
                 Precautions: "Control whiteflies; use resistant varieties."
             },
             "Tomato Mosaic Virus": {
                 Cause: "Virus spread by contaminated tools and contact.",
-                Cure: "No Cure; remove infected plants.",
+                Cure: "No cure available; remove infected plants.",
                 Precautions: "Disinfect tools; avoid smoking near plants."
             },
             "Tomato Healthy": {
@@ -228,9 +617,10 @@
             }
         };
 
-        document.addEventListener("DOMContentLoaded", function () {
+        // Initialize Vanta.js background
+        function initVantaBackground() {
             VANTA.NET({
-                el: "#wrapper",
+                el: "#vanta-background",
                 mouseControls: true,
                 touchControls: true,
                 gyroControls: false,
@@ -238,118 +628,181 @@
                 minWidth: 200.00,
                 scale: 1.00,
                 scaleMobile: 1.00,
-                color: 0xffbf,
-                backgroundColor: 0x0,
-                points: 12.00,
-                maxDistance: 27.00
+                color: document.body.dataset.theme === 'dark' ? 0x34d399 : 0x10b981,
+                backgroundColor: document.body.dataset.theme === 'dark' ? 0x0f172a : 0xffffff,
+                points: 10.00,
+                maxDistance: 23.00,
+                spacing: 17.00
             });
+        }
 
-            let hasImage = false;
+        // Theme toggle
+        function toggleTheme() {
+            const body = document.body;
+            const themeIcon = document.getElementById('themeIcon');
+            const themeText = document.getElementById('themeText');
+            
+            if (body.dataset.theme === 'light') {
+                body.dataset.theme = 'dark';
+                themeIcon.className = 'fas fa-sun';
+                themeText.textContent = 'Light';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.dataset.theme = 'light';
+                themeIcon.className = 'fas fa-moon';
+                themeText.textContent = 'Dark';
+                localStorage.setItem('theme', 'light');
+            }
+            
+            setTimeout(() => {
+                initVantaBackground();
+            }, 100);
+        }
 
-            // Preview uploaded image but don't shift or predict yet
-            document.querySelector('input[type="file"]').addEventListener('change', function (event) {
-                const [file] = event.target.files;
-                if (file) {
-                    const img = document.querySelector('.result-container img');
-                    img.src = URL.createObjectURL(file);
-                    hasImage = true; // Set flag to indicate an image is loaded
-                    img.style.display = 'block';
-                    document.querySelector('.result-container').classList.remove('active'); // Hide results when a new file is chosen
-                    document.querySelector('.suggestion-container').classList.remove('active'); // Hide suggestions when a new file is chosen
-                }
-            });
+        // Load saved theme
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.body.dataset.theme = savedTheme;
+            
+            const themeIcon = document.getElementById('themeIcon');
+            const themeText = document.getElementById('themeText');
+            
+            if (savedTheme === 'dark') {
+                themeIcon.className = 'fas fa-sun';
+                themeText.textContent = 'Light';
+            }
+        }
 
-            // Handle form submission
-            document.querySelector('form').addEventListener('submit', function (event) {
-                if (!hasImage) {
-                    event.preventDefault(); // Prevent submission if no image is loaded
-                    alert("Please select an image before submitting!");
-                }
-            });
+        // Preview uploaded image
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('previewImage');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    document.getElementById('resultContainer').classList.add('show');
+                    
+                    // Update file upload label
+                    const label = document.querySelector('.file-upload-label');
+                    label.innerHTML = `
+                        <i class="fas fa-check-circle file-upload-icon" style="color: var(--success);"></i>
+                        <h3>Image Selected</h3>
+                        <p>Click to change image</p>
+                    `;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
 
-            // Function to generate suggestion button after prediction
-            function createSuggestionButton(prediction) {
-                const suggestionButton = document.createElement('button');
-                suggestionButton.classList.add('btn', 'btn-primary', 'mt-3');
-                suggestionButton.textContent = 'Get Suggestion';
-                suggestionButton.addEventListener('click', function () {
-                    displaySuggestion(prediction);
+        // Show recommendations
+        function showRecommendations(prediction) {
+            const recommendationContent = document.getElementById('recommendationContent');
+            recommendationContent.innerHTML = '';
+            
+            const diseaseInfo = diseases[prediction];
+            if (diseaseInfo) {
+                Object.entries(diseaseInfo).forEach(([key, value]) => {
+                    const item = document.createElement('div');
+                    item.className = 'recommendation-item';
+                    item.innerHTML = `<strong>${key}:</strong> ${value}`;
+                    recommendationContent.appendChild(item);
                 });
-
-                document.querySelector('.result-container').appendChild(suggestionButton);
+            } else {
+                const noInfo = document.createElement('div');
+                noInfo.className = 'recommendation-item';
+                noInfo.textContent = "No recommendations available for this disease.";
+                recommendationContent.appendChild(noInfo);
             }
+        }
 
-            // Function to display suggestion
-            function displaySuggestion(prediction) {
-                const suggestionContainer = document.querySelector('.suggestion-container');
-                const recommendationContent = document.querySelector('#recommendation-content');
-                recommendationContent.innerHTML = ''; // Clear previous suggestion
+        // Clear results
+        function clearResults() {
+            document.getElementById('diseaseImage').value = '';
+            document.getElementById('resultContainer').classList.remove('show');
+            document.getElementById('previewImage').style.display = 'none';
+            
+            // Reset file upload label
+            const label = document.querySelector('.file-upload-label');
+            label.innerHTML = `
+                <i class="fas fa-cloud-upload-alt file-upload-icon"></i>
+                <h3>Upload Crop Image</h3>
+                <p>Click to select or drag and drop your image here</p>
+                <small>Supported formats: JPG, PNG, WEBP (Max: 5MB)</small>
+            `;
+        }
 
-                const diseaseInfo = diseases[prediction];
-                if (diseaseInfo) {
-                    const title = document.createElement('h3');
-                    //title.textContent = `Suggestions for ${prediction}`;
-                    recommendationContent.appendChild(title);
-
-                    Object.entries(diseaseInfo).forEach(([key, value]) => {
-                        const p = document.createElement('p');
-                        p.innerHTML = `<strong>${key}:</strong> ${value}`;
-                        recommendationContent.appendChild(p);
-                    });
-                } else {
-                    const noInfo = document.createElement('p');
-                    noInfo.textContent = "No suggestions available for this disease.";
-                    recommendationContent.appendChild(noInfo);
-                }
-
-                suggestionContainer.classList.add('active'); // Show suggestions
-            }
-
-            // Simulate backend prediction for demonstration
-            //const prediction = "Potato Early Blight"; // Replace this with actual prediction from the backend
-
-            if (prediction) {
-                createSuggestionButton(prediction);
-            }
+        // Form submission with loading state
+        document.getElementById('diseaseForm').addEventListener('submit', function() {
+            const btn = document.getElementById('predictBtn');
+            const originalContent = btn.innerHTML;
+            
+            btn.innerHTML = '<div class="loading"></div> <span>Analyzing...</span>';
+            btn.disabled = true;
+            
+            // Re-enable button after form submission (in case of errors)
+            setTimeout(() => {
+                btn.innerHTML = originalContent;
+                btn.disabled = false;
+            }, 3000);
         });
-    </script>
-</head>
 
-<body>
-    <div id="wrapper"></div>
-
-    <div class="header">
-        <h1>Crop Disease Identifier</h1>
-    </div>
-
-    <div class="container">
-        <div class="form-container">
-            <form method="POST" enctype="multipart/form-data" action="{{ url_for('crop_disease') }}">
-                <input type="file" name="file" class="form-control" accept="image/*" required>
-                <button type="submit" class="btn btn-primary mt-3">Predict</button>
-            </form>
-        </div>
-
-        <div class="result-container {{ 'active' if prediction else '' }}">
-            <!-- Display the image if 'image_url' is provided by the backend -->
-            {% if image_url %}
-                <img src="{{ image_url }}" alt="Selected Image">
-            {% else %}
-                <img src="#" alt="No Image Selected" style="display: none;">
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTheme();
+            initVantaBackground();
+            
+            // Show recommendations if prediction exists
+            const prediction = "{{ prediction }}";
+            if (prediction) {
+                showRecommendations(prediction);
+            }
+            
+            // Show results if they exist
+            {% if prediction %}
+            document.getElementById('resultContainer').classList.add('show');
             {% endif %}
-            <h2>Prediction: {{ prediction }}</h2>
-            <h3>Confidence: {{ confidence }}%</h3>
-        </div>
+        });
 
-        <div class="suggestion-container">
-            <div class="recommendation">
-                <div class="recommendation-info">
-                    <h3>Recommendations</h3>
-                    <div id="recommendation-content"></div>
-                </div>
-            </div>
-        </div>
-    </div>
+        // Drag and drop functionality
+        const fileUploadLabel = document.querySelector('.file-upload-label');
+        
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            fileUploadLabel.addEventListener(eventName, preventDefaults, false);
+        });
+        
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        
+        ['dragenter', 'dragover'].forEach(eventName => {
+            fileUploadLabel.addEventListener(eventName, highlight, false);
+        });
+        
+        ['dragleave', 'drop'].forEach(eventName => {
+            fileUploadLabel.addEventListener(eventName, unhighlight, false);
+        });
+        
+        function highlight(e) {
+            fileUploadLabel.style.borderColor = 'var(--text-accent)';
+            fileUploadLabel.style.background = 'rgba(16, 185, 129, 0.1)';
+        }
+        
+        function unhighlight(e) {
+            fileUploadLabel.style.borderColor = 'var(--border)';
+            fileUploadLabel.style.background = 'var(--bg-glass)';
+        }
+        
+        fileUploadLabel.addEventListener('drop', handleDrop, false);
+        
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            
+            document.getElementById('diseaseImage').files = files;
+            previewImage(document.getElementById('diseaseImage'));
+        }
+    </script>
 </body>
-
 </html>
