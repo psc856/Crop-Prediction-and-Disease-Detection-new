@@ -5,7 +5,7 @@ from flask import Flask, request, render_template, url_for
 from PIL import Image
 import tensorflow as tf
 from werkzeug.utils import secure_filename
-import gdown
+import requests
 
 # ---------------------------
 # Load ML models and scalers
@@ -14,13 +14,18 @@ model = pickle.load(open('model.pkl', 'rb'))
 sc = pickle.load(open('standscaler.pkl', 'rb'))
 ms = pickle.load(open('minmaxscaler.pkl', 'rb'))
 
-# Google Drive Model Download
+# S3 Model Download
 MODEL_PATH = "model.h5"
-MODEL_DRIVE_URL = "https://drive.google.com/uc?id=1u28EQFrTpeRCkG1pvhuhPU2Ryz6XyapG"
+MODEL_S3_URL = "https://crop-recommendation-model.s3.ap-south-1.amazonaws.com/model.h5"
 
 if not os.path.exists(MODEL_PATH):
-    print("Downloading disease detection model from Google Drive...")
-    gdown.download(MODEL_DRIVE_URL, MODEL_PATH, quiet=False)
+    print("Downloading disease detection model from S3...")
+    r = requests.get(MODEL_S3_URL, stream=True)
+    with open(MODEL_PATH, 'wb') as f:
+        for chunk in r.iter_content(chunk_size=1024*1024):
+            if chunk:
+                f.write(chunk)
+    print("Download complete.")
 
 disease_model = tf.keras.models.load_model(MODEL_PATH)
 
